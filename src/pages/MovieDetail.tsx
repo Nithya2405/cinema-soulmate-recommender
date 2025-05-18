@@ -7,7 +7,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import StarRating from '@/components/StarRating';
 import { Button } from '@/components/ui/button';
-import { Bookmark, Play, Star } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Bookmark, Play, Star, Calendar, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 
 const MovieDetail = () => {
@@ -69,10 +70,10 @@ const MovieDetail = () => {
   
   if (loading || !movie) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-cinema-dark">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cinema-light mx-auto"></div>
-          <p className="mt-4 text-cinema-light">Loading movie details...</p>
+          <div className="w-16 h-16 border-4 border-cinema-blue border-t-cinema-gold rounded-full mx-auto animate-spin"></div>
+          <p className="mt-4 text-cinema-light animate-pulse">Loading movie details...</p>
         </div>
       </div>
     );
@@ -82,77 +83,101 @@ const MovieDetail = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-grow">
+      <main className="flex-grow pt-16">
         {/* Movie Header with Backdrop */}
-        <div className="relative h-[50vh] lg:h-[70vh] overflow-hidden">
+        <div className="relative h-[60vh] lg:h-[80vh] overflow-hidden">
           <div className="absolute inset-0">
             <img 
               src={movie.backdrop} 
               alt={`${movie.title} backdrop`}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-cinema-dark via-cinema-dark/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-cinema-dark via-cinema-dark/80 to-transparent" />
           </div>
         </div>
         
         {/* Movie Content */}
-        <div className="container mx-auto px-4 -mt-48 relative z-10">
+        <div className="container mx-auto px-4 -mt-64 md:-mt-72 lg:-mt-80 relative z-10">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Poster */}
-            <div className="w-full max-w-xs mx-auto md:mx-0 shrink-0">
-              <div className="rounded-lg overflow-hidden shadow-2xl">
+            <div className="w-full max-w-xs mx-auto md:mx-0 shrink-0 animate-fade-in">
+              <div className="rounded-lg overflow-hidden shadow-poster relative group">
                 <img 
                   src={movie.poster} 
                   alt={`${movie.title} poster`}
                   className="w-full h-auto"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-cinema-navy/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-4 left-0 right-0 text-center">
+                    <Button className="bg-cinema-accent hover:bg-cinema-accent/90 text-white rounded-full">
+                      <Play className="mr-2" fill="white" />
+                      Watch Trailer
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
             
             {/* Details */}
             <div className="flex-grow">
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{movie.title}</h1>
+              <h1 className="text-3xl md:text-5xl font-bold font-playfair mb-2 animate-fade-in">{movie.title}</h1>
               
-              <div className="flex items-center flex-wrap gap-x-4 gap-y-2 mb-6">
-                <span className="text-cinema-gold">{movie.year}</span>
-                <span className="text-cinema-light">{movie.genres.join(', ')}</span>
+              <div className="flex items-center flex-wrap gap-x-4 gap-y-2 mb-6 animate-fade-in" style={{animationDelay: '0.1s'}}>
+                <span className="text-cinema-gold flex items-center">
+                  <Calendar size={16} className="mr-1" />
+                  {movie.year}
+                </span>
                 <div className="flex items-center">
-                  <Star size={18} className="text-cinema-gold fill-cinema-gold mr-1" />
+                  <Star size={16} className="text-cinema-gold fill-cinema-gold mr-1" />
                   <span>{movie.rating.toFixed(1)}</span>
                 </div>
+                <span className="text-cinema-light">140 min</span>
               </div>
               
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-2">Overview</h2>
-                <p className="text-muted-foreground">{movie.description}</p>
+              <div className="flex flex-wrap gap-2 mb-6 animate-fade-in" style={{animationDelay: '0.2s'}}>
+                {movie.genres.map((genre: string, idx: number) => (
+                  <Badge key={idx} variant="outline" className="bg-cinema-navy/50 text-cinema-light border-cinema-blue">
+                    {genre}
+                  </Badge>
+                ))}
               </div>
               
-              <div className="flex flex-col sm:flex-row gap-6 mb-8">
-                <div>
-                  <h2 className="text-lg font-semibold mb-2">Your Rating</h2>
-                  <StarRating 
-                    initialRating={userRating} 
-                    onRate={handleRate} 
-                    size="lg"
-                  />
+              <div className="mb-8 animate-fade-in" style={{animationDelay: '0.3s'}}>
+                <h2 className="text-xl font-playfair font-semibold mb-2">Overview</h2>
+                <p className="text-slate-200 leading-relaxed">{movie.description}</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div className="animate-fade-in" style={{animationDelay: '0.4s'}}>
+                  <h2 className="text-lg font-playfair font-semibold mb-4">Your Rating</h2>
+                  <div className="bg-cinema-navy/50 p-4 rounded-lg border border-cinema-blue/30">
+                    <StarRating 
+                      initialRating={userRating} 
+                      onRate={handleRate} 
+                      size="lg"
+                    />
+                    <p className="mt-3 text-sm text-muted-foreground">Rate this movie to improve your recommendations</p>
+                  </div>
                 </div>
                 
-                <div>
-                  <h2 className="text-lg font-semibold mb-2">Actions</h2>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant={inWatchlist ? "default" : "outline"}
-                      onClick={toggleWatchlist}
-                      className={inWatchlist ? "bg-cinema-gold text-cinema-dark hover:bg-cinema-gold/80" : ""}
-                    >
-                      <Bookmark size={18} className="mr-2" />
-                      {inWatchlist ? "In Watchlist" : "Add to Watchlist"}
-                    </Button>
-                    
-                    <Button variant="outline" className="border-cinema-accent text-cinema-accent hover:bg-cinema-accent/10">
-                      <Play size={18} className="mr-2" fill="currentColor" />
-                      Trailer
-                    </Button>
+                <div className="animate-fade-in" style={{animationDelay: '0.5s'}}>
+                  <h2 className="text-lg font-playfair font-semibold mb-4">Actions</h2>
+                  <div className="bg-cinema-navy/50 p-4 rounded-lg border border-cinema-blue/30">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button 
+                        variant={inWatchlist ? "default" : "outline"}
+                        onClick={toggleWatchlist}
+                        className={inWatchlist ? "bg-cinema-gold text-cinema-dark hover:bg-cinema-gold/80 grow" : "grow"}
+                      >
+                        <Bookmark size={18} className="mr-2" />
+                        {inWatchlist ? "In Watchlist" : "Add to Watchlist"}
+                      </Button>
+                      
+                      <Button variant="outline" className="border-cinema-accent text-cinema-accent hover:bg-cinema-accent/10 grow">
+                        <Play size={18} className="mr-2" fill="currentColor" />
+                        Watch Trailer
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { Play, Plus } from 'lucide-react';
 
 interface HeroProps {
   movie?: {
@@ -22,38 +23,43 @@ const Hero = ({ movie }: HeroProps) => {
   }
   
   return (
-    <div className="relative h-[70vh] overflow-hidden">
+    <div className="relative h-[85vh] overflow-hidden">
       {/* Backdrop */}
       <div className="absolute inset-0">
         <img 
           src={movie.backdrop} 
           alt={`${movie.title} backdrop`}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover animate-scale-in"
+          loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-cinema-dark via-cinema-dark/90 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-cinema-dark via-cinema-dark/80 to-transparent" />
       </div>
       
       {/* Content */}
       <div className="absolute inset-0 flex items-center">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-3">{movie.title}</h1>
-            <div className="flex items-center space-x-2 mb-6">
-              <span className="text-cinema-gold">{movie.year}</span>
+        <div className="container mx-auto px-4 pt-20">
+          <div className="max-w-2xl space-y-6 animate-fade-in">
+            <h1 className="text-4xl md:text-6xl font-bold font-playfair mb-3 opacity-0 animate-fade-in" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}>
+              {movie.title}
+            </h1>
+            <div className="flex items-center space-x-3 mb-6 opacity-0 animate-fade-in" style={{animationDelay: '0.4s', animationFillMode: 'forwards'}}>
+              <span className="text-cinema-gold font-semibold">{movie.year}</span>
               <span className="text-muted-foreground">•</span>
-              <span className="text-cinema-light">{movie.genres.join(', ')}</span>
+              <span className="text-cinema-light bg-cinema-navy/50 px-3 py-1 rounded-full text-sm">{movie.genres.join(', ')}</span>
             </div>
-            <p className="text-lg text-muted-foreground mb-8 line-clamp-3">
+            <p className="text-lg text-slate-200 mb-8 line-clamp-3 opacity-0 animate-fade-in" style={{animationDelay: '0.6s', animationFillMode: 'forwards'}}>
               {movie.description}
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 opacity-0 animate-fade-in" style={{animationDelay: '0.8s', animationFillMode: 'forwards'}}>
               <Button 
-                className="bg-cinema-accent hover:bg-cinema-accent/80 text-white"
+                className="bg-cinema-accent hover:bg-cinema-accent/90 text-white px-8 py-6 rounded-full group"
                 onClick={() => navigate(`/movie/${movie.id}`)}
               >
-                More Info
+                <Play size={20} className="mr-2 transition-transform group-hover:scale-125" fill="white" />
+                Watch Trailer
               </Button>
-              <Button variant="outline" className="border-cinema-light hover:bg-cinema-light/10">
+              <Button variant="outline" className="border-cinema-light hover:bg-cinema-light/10 px-8 py-6 rounded-full">
+                <Plus size={20} className="mr-2" />
                 Add to Watchlist
               </Button>
             </div>
